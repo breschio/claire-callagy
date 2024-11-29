@@ -10,25 +10,28 @@ class Carousel {
     }
 
     init() {
-        this.cloneItems();
+        const firstItemClone = this.items[0].cloneNode(true);
+        this.container.appendChild(firstItemClone);
+        
+        const lastItemClone = this.items[this.totalItems - 1].cloneNode(true);
+        this.container.insertBefore(lastItemClone, this.container.firstChild);
+        
+        this.items = document.querySelectorAll('.carousel-item');
+        
+        this.currentIndex = 1;
+        
         this.centerCurrentItem();
         this.updateActiveState();
         this.startAutoScroll();
     }
 
-    cloneItems() {
-        const firstClones = Array.from(this.items).map(item => item.cloneNode(true));
-        const lastClones = Array.from(this.items).map(item => item.cloneNode(true));
-        
-        firstClones.forEach(clone => this.container.appendChild(clone));
-        lastClones.reverse().forEach(clone => this.container.insertBefore(clone, this.container.firstChild));
-        
-        this.items = document.querySelectorAll('.carousel-item');
-    }
-
     updateActiveState() {
         this.items.forEach(item => item.classList.remove('active'));
-        this.items[this.currentIndex + this.totalItems].classList.add('active');
+        this.items[this.currentIndex].classList.add('active');
+        
+        if (this.currentIndex === this.totalItems + 1) {
+            this.items[1].classList.add('active');
+        }
     }
 
     centerCurrentItem() {
@@ -37,27 +40,40 @@ class Carousel {
         const containerWidth = this.container.parentElement.offsetWidth;
         const itemTotalWidth = itemWidth + itemMargin;
         const offset = (containerWidth - itemWidth) / 2;
-        const translateX = -((this.currentIndex + this.totalItems) * itemTotalWidth) + offset;
+        const translateX = -(this.currentIndex * itemTotalWidth) + offset;
         
         this.container.style.transform = `translateX(${translateX}px)`;
     }
 
     next() {
+        this.container.style.transition = 'transform 0.5s ease-in-out';
         this.currentIndex++;
-        this.centerCurrentItem();
+        
         this.updateActiveState();
+        this.centerCurrentItem();
+
+        if (this.currentIndex >= this.totalItems + 1) {
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this.container.style.transition = 'none';
+                    this.currentIndex = 1;
+                    this.centerCurrentItem();
+                }, 500);
+            });
+        }
     }
 
     startAutoScroll() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
         this.interval = setInterval(() => this.next(), 3000);
     }
 }
 
-// Initialize carousel when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = new Carousel();
     
-    // Recenter on window resize
     window.addEventListener('resize', () => {
         carousel.centerCurrentItem();
     });
