@@ -5,85 +5,61 @@ class Carousel {
         this.totalItems = this.items.length;
         this.currentIndex = 0;
         this.interval = null;
+        this.isLifestyle = this.container.classList.contains('carousel-lifestyle');
         
         this.init();
     }
 
     init() {
-        const firstItemClone = this.items[0].cloneNode(true);
-        this.container.appendChild(firstItemClone);
-        
-        const lastItemClone = this.items[this.totalItems - 1].cloneNode(true);
-        this.container.insertBefore(lastItemClone, this.container.firstChild);
-        
-        this.items = this.container.querySelectorAll('.carousel-item');
-        
-        this.currentIndex = 1;
-        
-        if (this.container.classList.contains('carousel-lifestyle')) {
-            this.items.forEach(item => {
-                item.style.opacity = '0.3';
-            });
-            this.items[this.currentIndex].style.opacity = '1';
+        // Clone first set of items and append them
+        for (let i = 0; i < this.totalItems; i++) {
+            const clone = this.items[i].cloneNode(true);
+            this.container.appendChild(clone);
         }
+
+        // Set initial opacity
+        this.updateOpacity();
         
-        this.centerCurrentItem();
-        this.updateActiveState();
-        this.startAutoScroll();
+        // Position first item without transition
+        this.container.style.transition = 'none';
+        this.moveToIndex(0);
+        
+        // Force a reflow before enabling transitions
+        this.container.offsetHeight;
+        
+        // Start auto-scroll after a brief delay
+        setTimeout(() => {
+            this.startAutoScroll();
+        }, 100);
     }
 
-    updateActiveState() {
-        const isLifestyle = this.container.classList.contains('carousel-lifestyle');
-        
-        this.items.forEach(item => {
-            item.classList.remove('active');
-            if (isLifestyle) {
-                item.style.opacity = '0.3';
-            }
-        });
-        
-        const activeItem = this.items[this.currentIndex];
-        activeItem.classList.add('active');
-        if (isLifestyle) {
-            activeItem.style.opacity = '1';
-        }
-        
-        // Handle the loop transition
-        if (this.currentIndex === this.totalItems + 1) {
-            this.items[1].classList.add('active');
-            if (isLifestyle) {
-                this.items[1].style.opacity = '1';
-            }
-        }
-    }
-
-    centerCurrentItem() {
-        const isLifestyle = this.container.classList.contains('carousel-lifestyle');
-        const itemWidth = isLifestyle ? 450 : this.items[0].querySelector('img').offsetWidth;
-        const itemMargin = 16;
-        const containerWidth = this.container.parentElement.offsetWidth;
-        const itemTotalWidth = itemWidth + itemMargin;
-        const offset = (containerWidth - itemWidth) / 2;
-        const translateX = -(this.currentIndex * itemTotalWidth) + offset;
-        
+    moveToIndex(index) {
+        const itemWidth = this.isLifestyle ? 450 : this.items[0].querySelector('img').offsetWidth;
+        const translateX = -(index * (itemWidth + 16));
         this.container.style.transform = `translateX(${translateX}px)`;
     }
 
-    next() {
-        this.container.style.transition = 'transform 0.5s ease-in-out';
-        this.currentIndex++;
-        
-        this.updateActiveState();
-        this.centerCurrentItem();
+    updateOpacity() {
+        const normalizedIndex = this.currentIndex % this.totalItems;
+        this.container.querySelectorAll('.carousel-item').forEach((item, i) => {
+            const itemIndex = i % this.totalItems;
+            item.style.opacity = itemIndex === normalizedIndex ? '1' : '0.3';
+        });
+    }
 
-        if (this.currentIndex >= this.totalItems + 1) {
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    this.container.style.transition = 'none';
-                    this.currentIndex = 1;
-                    this.centerCurrentItem();
-                }, 500);
-            });
+    next() {
+        this.currentIndex++;
+        this.container.style.transition = 'transform 0.5s ease-in-out';
+        this.moveToIndex(this.currentIndex);
+        this.updateOpacity();
+
+        // Reset position when we reach the cloned set
+        if (this.currentIndex >= this.totalItems) {
+            setTimeout(() => {
+                this.container.style.transition = 'none';
+                this.currentIndex = 0;
+                this.moveToIndex(0);
+            }, 500);
         }
     }
 
@@ -105,7 +81,7 @@ class TabManager {
     }
 
     init() {
-        // Initialize carousels for both galleries
+        // Initialize carousels
         const landscapeCarousel = document.querySelector('#landscape .carousel');
         const lifestyleCarousel = document.querySelector('#lifestyle .carousel');
         
@@ -116,13 +92,25 @@ class TabManager {
             this.carousels.lifestyle = new Carousel(lifestyleCarousel);
         }
 
-        // Add click handlers to tabs
+        // Add click handlers to tabs and logo
         this.tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.switchTab(tab.dataset.tab);
+                const tabId = tab.dataset.tab;
+                this.switchTab(tabId);
+                this.restartCarousel(tabId);
             });
         });
+
+        // Add click handler to logo
+        const logoLink = document.querySelector('.logo-link');
+        if (logoLink) {
+            logoLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchTab('landscape');
+                this.restartCarousel('landscape');
+            });
+        }
 
         // Handle initial hash
         if (window.location.hash) {
@@ -131,8 +119,17 @@ class TabManager {
         }
     }
 
+    restartCarousel(tabId) {
+        const carousel = this.carousels[tabId];
+        if (carousel) {
+            carousel.currentIndex = 0;
+            carousel.moveToIndex(0);
+            carousel.updateOpacity();
+            carousel.startAutoScroll();
+        }
+    }
+
     switchTab(tabId) {
-        // Update active states
         this.tabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.tab === tabId);
         });
@@ -141,7 +138,6 @@ class TabManager {
             content.classList.toggle('active', content.id === tabId);
         });
 
-        // Update URL without page reload
         history.pushState(null, null, `#${tabId}`);
     }
 }
@@ -149,7 +145,6 @@ class TabManager {
 document.addEventListener('DOMContentLoaded', () => {
     const tabManager = new TabManager();
     
-    // Handle browser back/forward buttons
     window.addEventListener('popstate', () => {
         const tabId = window.location.hash.substring(1) || 'landscape';
         tabManager.switchTab(tabId);
