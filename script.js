@@ -1,7 +1,7 @@
 class Carousel {
-    constructor() {
-        this.container = document.querySelector('.carousel');
-        this.items = document.querySelectorAll('.carousel-item');
+    constructor(container) {
+        this.container = container;
+        this.items = container.querySelectorAll('.carousel-item');
         this.totalItems = this.items.length;
         this.currentIndex = 0;
         this.interval = null;
@@ -16,9 +16,16 @@ class Carousel {
         const lastItemClone = this.items[this.totalItems - 1].cloneNode(true);
         this.container.insertBefore(lastItemClone, this.container.firstChild);
         
-        this.items = document.querySelectorAll('.carousel-item');
+        this.items = this.container.querySelectorAll('.carousel-item');
         
         this.currentIndex = 1;
+        
+        if (this.container.classList.contains('carousel-lifestyle')) {
+            this.items.forEach(item => {
+                item.style.opacity = '0.3';
+            });
+            this.items[this.currentIndex].style.opacity = '1';
+        }
         
         this.centerCurrentItem();
         this.updateActiveState();
@@ -26,16 +33,33 @@ class Carousel {
     }
 
     updateActiveState() {
-        this.items.forEach(item => item.classList.remove('active'));
-        this.items[this.currentIndex].classList.add('active');
+        const isLifestyle = this.container.classList.contains('carousel-lifestyle');
         
+        this.items.forEach(item => {
+            item.classList.remove('active');
+            if (isLifestyle) {
+                item.style.opacity = '0.3';
+            }
+        });
+        
+        const activeItem = this.items[this.currentIndex];
+        activeItem.classList.add('active');
+        if (isLifestyle) {
+            activeItem.style.opacity = '1';
+        }
+        
+        // Handle the loop transition
         if (this.currentIndex === this.totalItems + 1) {
             this.items[1].classList.add('active');
+            if (isLifestyle) {
+                this.items[1].style.opacity = '1';
+            }
         }
     }
 
     centerCurrentItem() {
-        const itemWidth = this.items[0].offsetWidth;
+        const isLifestyle = this.container.classList.contains('carousel-lifestyle');
+        const itemWidth = isLifestyle ? 450 : this.items[0].querySelector('img').offsetWidth;
         const itemMargin = 16;
         const containerWidth = this.container.parentElement.offsetWidth;
         const itemTotalWidth = itemWidth + itemMargin;
@@ -71,10 +95,63 @@ class Carousel {
     }
 }
 
+class TabManager {
+    constructor() {
+        this.tabs = document.querySelectorAll('.nav-link');
+        this.contents = document.querySelectorAll('.tab-content');
+        this.carousels = {};
+        
+        this.init();
+    }
+
+    init() {
+        // Initialize carousels for both galleries
+        const landscapeCarousel = document.querySelector('#landscape .carousel');
+        const lifestyleCarousel = document.querySelector('#lifestyle .carousel');
+        
+        if (landscapeCarousel) {
+            this.carousels.landscape = new Carousel(landscapeCarousel);
+        }
+        if (lifestyleCarousel) {
+            this.carousels.lifestyle = new Carousel(lifestyleCarousel);
+        }
+
+        // Add click handlers to tabs
+        this.tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchTab(tab.dataset.tab);
+            });
+        });
+
+        // Handle initial hash
+        if (window.location.hash) {
+            const tabId = window.location.hash.substring(1);
+            this.switchTab(tabId);
+        }
+    }
+
+    switchTab(tabId) {
+        // Update active states
+        this.tabs.forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.tab === tabId);
+        });
+
+        this.contents.forEach(content => {
+            content.classList.toggle('active', content.id === tabId);
+        });
+
+        // Update URL without page reload
+        history.pushState(null, null, `#${tabId}`);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const carousel = new Carousel();
+    const tabManager = new TabManager();
     
-    window.addEventListener('resize', () => {
-        carousel.centerCurrentItem();
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', () => {
+        const tabId = window.location.hash.substring(1) || 'landscape';
+        tabManager.switchTab(tabId);
     });
 }); 

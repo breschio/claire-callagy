@@ -4,37 +4,14 @@
     box-sizing: border-box;
 }
 
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 400 to 900
-
-.playfair-display-<uniquifier> {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
-
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 200 to 1000
-
-.nunito-sans-<uniquifier> {
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100,
-    "YTLC" 500;
-}
-
 body {
     font-family: "Nunito Sans", sans-serif;
     color: #2D363B;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
 }
 
 header {
-    padding: 2rem;
+    padding: 1.5rem 2rem 0.5rem 2rem;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
@@ -53,11 +30,18 @@ nav a {
     letter-spacing: 2px;
     font-size: 1rem;
     font-weight: 600;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
 }
 
 nav a:hover {
-    color:  #2D363B;
+    color: #2D363B;
+}
+
+nav a.active {
+    color: #2D363B;
+    border-bottom: 2px solid #507D96;
 }
 
 h1 {
@@ -68,6 +52,70 @@ h1 {
     letter-spacing: 4px;
     text-transform: uppercase;
     color: #507D96;
+}
+
+/* Tab Content Styles */
+.tab-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Content Container Styles */
+.content-container {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.content-container h2 {
+    color: #507D96;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2D363B;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+button[type="submit"] {
+    background-color: #507D96;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2D363B;
 }
 
 .carousel-container {
@@ -89,9 +137,9 @@ h1 {
 }
 
 .carousel-item {
-    width: 800px;
+    width: auto;
     height: 100%;
-    padding: 0 10px;
+    padding: 0 8px;
     position: relative;
     opacity: 0.3;
     transition: all 0.5s ease-in-out;
@@ -105,48 +153,65 @@ h1 {
     opacity: 1;
 }
 
-.carousel-item img {
+/* Default (Landscape) carousel styles */
+#landscape .carousel-item img {
     width: 100%;
     height: 600px;
     object-fit: cover;
     background-color: #e0e0e0;
 }
 
+/* Lifestyle specific carousel styles */
+.carousel-lifestyle {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+    padding: 2rem 0;
+}
+
+.carousel-item-lifestyle {
+    padding: 0 8px;
+    margin: 0 8px;
+}
+
+.carousel-item-lifestyle img {
+    width: 450px;
+    height: 600px;
+    object-fit: cover;
+    background-color: #e0e0e0;
+    margin: 0 auto;
+}
+
 /* Responsive Design */
+@media (max-width: 1400px) {
+    #landscape .carousel-item img {
+        height: 550px;
+    }
+    
+    .carousel-item-lifestyle img {
+        width: 412px;
+        height: 550px;
+    }
+}
+
 @media (max-width: 768px) {
-    .carousel-container {
-        height: calc(100vh - 80px);
+    #landscape .carousel-item img {
+        height: 450px;
     }
     
-    .carousel-item {
-        width: 600px;
-    }
-    
-    .carousel-item img {
+    .carousel-item-lifestyle img {
+        width: 337px;
         height: 450px;
     }
 }
 
 @media (max-width: 480px) {
-    .carousel-container {
-        height: calc(100vh - 60px);
+    #landscape .carousel-item img {
+        height: 400px;
     }
     
-    .carousel-item {
-        width: 400px;
-    }
-    
-    .carousel-item img {
-        height: 300px;
-    }
-    
-    header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    
-    nav {
-        gap: 1rem;
+    .carousel-item-lifestyle img {
+        width: 300px;
+        height: 400px;
     }
 } 
