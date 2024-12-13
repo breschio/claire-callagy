@@ -344,4 +344,95 @@ button[type="submit"]:hover {
         width: 100%;
     }
 }
+
+/* Add these responsive header styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1.5rem;
+    }
+
+    .logo-link {
+        margin-bottom: 1rem;
+    }
+
+    nav {
+        width: 100%;
+        gap: 1.5rem;
+    }
+
+    nav a {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    nav {
+        gap: 1rem;
+    }
+
+    nav a {
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+}
+
+/* Update carousel container styles */
+@media (max-width: 768px) {
+    .carousel-container {
+        padding: 0;
+        height: calc(100vh - 150px);
+    }
+
+    .carousel {
+        padding: 0;
+    }
+
+    .carousel-item {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 1rem;
+    }
+
+    #landscape .carousel-item img {
+        height: 450px;
+        width: auto;
+        max-width: 100%;
+    }
+    
+    .carousel-item-lifestyle img {
+        width: auto;
+        height: 450px;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: calc(100vh - 130px);
+    }
+
+    #landscape .carousel-item img {
+        height: 400px;
+    }
+    
+    .carousel-item-lifestyle img {
+        width: 300px;
+        height: 400px;
+        margin: 0 auto;
+    }
+}
+
+/* Update moveToIndex method in JavaScript to account for centering */
   

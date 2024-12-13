@@ -34,8 +34,10 @@ class Carousel {
     }
 
     moveToIndex(index) {
-        const itemWidth = this.isLifestyle ? 450 : this.items[0].querySelector('img').offsetWidth;
-        const translateX = -(index * (itemWidth + 16));
+        const isMobile = window.innerWidth <= 768;
+        const itemWidth = isMobile ? window.innerWidth : (this.isLifestyle ? 450 : this.items[0].querySelector('img').offsetWidth);
+        const translateX = -(index * itemWidth);
+        
         this.container.style.transform = `translateX(${translateX}px)`;
     }
 
