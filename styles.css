@@ -165,16 +165,18 @@ button[type="submit"]:hover {
 }
 
 .carousel-item-lifestyle {
-    padding: 0 8px;
-    margin: 0 8px;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
 }
 
 .carousel-item-lifestyle img {
-    width: 450px;
-    height: 600px;
-    object-fit: cover;
-    background-color: #e0e0e0;
-    margin: 0 auto;
+    width: auto;
+    height: calc(100vh - 180px);
+    max-width: calc(100vw - 4rem);
+    object-fit: contain;
 }
 
 /* Responsive Design */
@@ -435,4 +437,99 @@ button[type="submit"]:hover {
 }
 
 /* Update moveToIndex method in JavaScript to account for centering */
+  
+/* Update the media queries for better device coverage */
+
+/* Tablets and larger mobile devices (iPad, etc) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .carousel-container {
+        padding: 0;
+        height: calc(100vh - 150px);
+    }
+
+    .carousel {
+        padding: 0;
+    }
+
+    .carousel-item {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 1.5rem;
+    }
+
+    #landscape .carousel-item img {
+        height: 500px;
+        width: auto;
+        max-width: 100%;
+    }
+    
+    .carousel-item-lifestyle img {
+        width: auto;
+        height: 500px;
+        max-width: 100%;
+    }
+
+    /* Adjust header for tablets */
+    header {
+        flex-direction: row;
+        align-items: center;
+        padding: 1.5rem 2rem;
+    }
+
+    .logo-link {
+        margin-bottom: 0;
+    }
+
+    nav {
+        gap: 2rem;
+    }
+
+    nav a {
+        font-size: 1rem;
+    }
+}
+
+/* Keep existing mobile styles but adjust the breakpoint */
+@media (max-width: 768px) {
+    /* ... existing mobile styles ... */
+}
+
+/* Update lifestyle carousel container */
+#lifestyle .carousel-container {
+    height: calc(100vh - 80px); /* More vertical space for lifestyle images */
+}
+
+.carousel-item-lifestyle {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.carousel-item-lifestyle img {
+    width: auto;
+    height: calc(100vh - 120px); /* Adjust height to fill more space */
+    max-width: calc(100vw - 4rem);
+    object-fit: contain;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #lifestyle .carousel-container {
+        height: calc(100vh - 120px);
+    }
+    
+    .carousel-item-lifestyle img {
+        height: calc(100vh - 140px);
+    }
+}
+
+@media (max-width: 480px) {
+    #lifestyle .carousel-container {
+        height: calc(100vh - 100px);
+    }
+}
   
