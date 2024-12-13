@@ -352,11 +352,11 @@ button[type="submit"]:hover {
     header {
         flex-direction: column;
         align-items: flex-start;
-        padding: 1rem 1.5rem;
+        padding: 0.75rem 1.5rem;
     }
 
     .logo-link {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     nav {
@@ -391,8 +391,8 @@ button[type="submit"]:hover {
 /* Update carousel container styles */
 @media (max-width: 768px) {
     .carousel-container {
+        height: calc(100vh - 100px);
         padding: 0;
-        height: calc(100vh - 150px);
     }
 
     .carousel {
@@ -530,6 +530,40 @@ button[type="submit"]:hover {
 @media (max-width: 480px) {
     #lifestyle .carousel-container {
         height: calc(100vh - 100px);
+    }
+}
+
+/* Additional breakpoint for shorter screens */
+@media (max-height: 700px) and (max-width: 768px) {
+    header {
+        padding: 0.5rem 1.5rem;
+    }
+
+    .carousel-container {
+        height: calc(100vh - 80px);
+    }
+
+    .carousel-item-lifestyle img {
+        max-height: calc(100vh - 100px);
+    }
+}
+
+/* Even smaller screens */
+@media (max-height: 600px) and (max-width: 768px) {
+    header {
+        padding: 0.25rem 1rem;
+    }
+
+    .logo-link h1 {
+        font-size: 1.25rem;
+    }
+
+    nav a {
+        font-size: 0.8rem;
+    }
+
+    .carousel-item-lifestyle img {
+        max-height: calc(100vh - 80px);
     }
 }
   
