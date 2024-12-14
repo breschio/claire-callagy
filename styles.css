@@ -68,14 +68,15 @@ h1 {
 /* Content Container Styles */
 .content-container {
     max-width: 800px;
-    margin: 4rem auto;
+    margin: 4rem 0;
     padding: 0 2rem;
 }
 
 .content-container h2 {
     color: #507D96;
     margin-bottom: 2rem;
-    font-size: 2rem;
+    font-size: 1.4rem;
+    font-weight: 600;
 }
 
 /* Form Styles */
@@ -117,99 +118,63 @@ button[type="submit"]:hover {
     background-color: #2D363B;
 }
 
+/* Base carousel styles */
 .carousel-container {
     width: 100%;
     height: calc(100vh - 100px);
     overflow: hidden;
     position: relative;
-    background-color: white;
     display: flex;
     align-items: center;
-    padding: 0;
 }
 
 .carousel {
     display: flex;
     transition: transform 0.5s ease-in-out;
     height: 100%;
-    padding: 2rem 2rem;
-}
-
-.carousel-item {
-    width: auto;
-    height: 100%;
-    padding: 0;
-    position: relative;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-    margin: 0 16px 0 0;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-/* Default (Landscape) carousel styles */
-#landscape .carousel-item img {
-    width: 100%;
-    height: 600px;
-    object-fit: cover;
-    background-color: #e0e0e0;
-}
-
-/* Lifestyle specific carousel styles */
-.carousel-lifestyle {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    height: 100%;
-    padding: 2rem 0;
-}
-
-.carousel-item-lifestyle {
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 2rem;
 }
 
-.carousel-item-lifestyle img {
+.carousel-item {
+    flex: 0 0 auto;
     width: auto;
-    height: calc(100vh - 180px);
-    max-width: calc(100vw - 4rem);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.carousel-item:last-child {
+    margin-right: 0;
+}
+
+.carousel-item img {
+    height: 600px;
+    width: auto;
     object-fit: contain;
 }
 
-/* Responsive Design */
-@media (max-width: 1400px) {
-    #landscape .carousel-item img {
-        height: 550px;
-    }
-    
-    .carousel-item-lifestyle img {
-        width: 412px;
-        height: 550px;
-    }
-}
-
+/* Mobile styles */
 @media (max-width: 768px) {
-    #landscape .carousel-item img {
-        height: 450px;
+    .carousel {
+        padding: 0;
     }
-    
-    .carousel-item-lifestyle img {
-        width: 337px;
-        height: 450px;
-    }
-}
 
-@media (max-width: 480px) {
-    #landscape .carousel-item img {
-        height: 400px;
+    .carousel-item {
+        width: 100vw;
+        margin-right: 0;
+        padding: 1rem;
     }
-    
-    .carousel-item-lifestyle img {
-        width: 300px;
-        height: 400px;
+
+    .carousel-item img {
+        height: 450px;
+        width: auto;
+        max-width: calc(100vw - 2rem);
+    }
+
+    .content-container {
+        padding: 0 1.5rem;
     }
 }
 
@@ -228,9 +193,13 @@ button[type="submit"]:hover {
 }
 
 /* About Page Styles */
+.about-text {
+    max-width: 500px;
+}
+
 .about-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 4rem;
     line-height: 1.6;
 }
@@ -243,13 +212,9 @@ button[type="submit"]:hover {
 
 .about-highlights h3 {
     color: #507D96;
-    margin: 2rem 0 1rem;
+    margin: 0 0 1rem;
     font-size: 1.2rem;
     font-weight: 600;
-}
-
-.about-highlights h3:first-child {
-    margin-top: 0;
 }
 
 .about-highlights ul {
@@ -273,7 +238,11 @@ button[type="submit"]:hover {
     }
     
     .about-highlights h3 {
-        margin: 1.5rem 0 0.75rem;
+        margin: -2rem 0 1rem;
+    }
+
+    .about-text {
+        max-width: none;
     }
 }
 
@@ -347,44 +316,107 @@ button[type="submit"]:hover {
     }
 }
 
-/* Add these responsive header styles */
+/* Update mobile header styles */
 @media (max-width: 768px) {
     header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        padding: 1.5rem 1.5rem 0.25rem 1.5rem;
+        height: auto;
+        z-index: 100;
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding: 0.75rem 1.5rem;
+        border-bottom: none;
+    }
+
+    /* Add pseudo-element for border with margins */
+    header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 24px;
+        right: 24px;
+        height: 1px;
+        background-color: #eee;
     }
 
     .logo-link {
-        margin-bottom: 0.5rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .logo-link h1 {
+        font-size: 1.5rem;
+        color: #507D96;
+        letter-spacing: 2px;
     }
 
     nav {
         width: 100%;
-        gap: 1.5rem;
+        justify-content: flex-start;
+        gap: 2rem;
     }
 
     nav a {
         font-size: 0.9rem;
+        color: #666;
+        border-bottom: none;
+        padding-bottom: 0.75rem;
+    }
+
+    nav a.active {
+        color: #507D96;
+        border-bottom: none;
+        position: relative;
+    }
+
+    nav a.active::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #507D96;
+    }
+
+    main {
+        padding-top: 100px;
+    }
+
+    .carousel-container {
+        height: calc(100vh - 100px);
+        margin-top: 24px;
+    }
+
+    /* Update lifestyle carousel container */
+    #lifestyle .carousel-container {
+        height: calc(100vh - 100px);
+        margin-top: 24px;
     }
 }
 
-@media (max-width: 480px) {
+/* Additional adjustments for very small screens */
+@media (max-height: 600px) and (max-width: 768px) {
     header {
-        padding: 1rem;
+        height: auto;
+        padding: 1.5rem;
     }
 
-    h1 {
-        font-size: 1.5rem;
+    .logo-link {
+        margin-bottom: 0.15rem;
     }
 
-    nav {
-        gap: 1rem;
+    main {
+        padding-top: 70px;
     }
 
-    nav a {
-        font-size: 0.85rem;
-        letter-spacing: 1px;
+    .carousel-container {
+        height: calc(100vh - 70px);
+        margin-top: 24px;
     }
 }
 
